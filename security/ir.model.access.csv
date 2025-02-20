@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_customer_metrics_all,Customer Metrics All,model_res_partner_customer_metrics,,1,1,0,0

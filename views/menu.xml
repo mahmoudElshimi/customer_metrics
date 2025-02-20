@@ -1,0 +1,11 @@
+<odoo>
+    <menuitem id="menu_main_customer_metrics"
+              name="Customers Metrics"
+              parent="sale.sale_menu_root"
+              sequence="2"/>
+
+    <menuitem id="menu_customer_metrics"
+	      name="Customer Metrics"
+	      parent="menu_main_customer_metrics"
+	      action="action_customer_metrics"/>
+</odoo>
