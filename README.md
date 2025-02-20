@@ -18,7 +18,7 @@ This module is actively developed and open to improvements. Contributions, feedb
 
 1. **Customer Metrics List View**  
 
-   ![List(Tree) View](./description/tree_list_view.jpeg)
+   ![List(Tree) View](./static/description/tree_list_view.jpeg)
 
 ## Installation
 
