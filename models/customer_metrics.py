@@ -9,10 +9,10 @@ class ResPartnerCustomerMetrics(models.Model):
         "res.partner", string="Customer", required=True, ondelete="cascade"
     )
     total_sales = fields.Float(
-        string="Total Sales", compute="_compute_total_sales", store=True
+        string="Total Sales", compute="_compute_total_sales", readonly=True, store=True
     )
     order_count = fields.Integer(
-        string="Order Count", compute="_compute_order_count", store=True
+        string="Order Count", compute="_compute_order_count", readonly=True, store=True
     )
 
     # Compute total sales for the customer
