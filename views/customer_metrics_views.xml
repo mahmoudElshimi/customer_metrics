@@ -5,8 +5,8 @@
 	    <field name="arch" type="xml">
 		<tree  default_order="total_sales desc">
 		    <field name="customer_id"  widget="many2one_tags"/>
-		    <field name="total_sales"/>
-		    <field name="order_count"/>
+		    <field name="total_sales" readonly="1"/>
+		    <field name="order_count" readonly="1"/>
 		</tree>
 	    </field>
 	</record>
