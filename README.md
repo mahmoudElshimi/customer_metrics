@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Welcome to the Customer Metrics Dashboard Odoo module! 🚀  
+Welcome to the Customer Metrics Dashboard Odoo module!
 
 This module provides a dashboard to list the **top 5 customers** based on total sales and order count. It helps businesses track their most valuable clients directly from the Sales menu.
 
@@ -12,7 +12,7 @@ This module provides a dashboard to list the **top 5 customers** based on total 
 - Integrated with Odoo's Sales module for seamless access.
 
 ### Note:
-This module is actively developed and open to improvements. Contributions, feedback, and suggestions are highly welcome! Remember: **RTFM** (Read The F*cking Manual) and **KISS** (Keep It Simple, Stupid!). 😊
+This module is actively developed and open to improvements. Contributions, feedback, and suggestions are highly welcome! Remember: **RTFM** (Read The F*cking Manual) and **KISS** (Keep It Simple, Stupid!). 
 
 ## Screenshot
 
@@ -51,5 +51,5 @@ To install the Customer Metrics Dashboard module, follow these steps:
 
 ## How to Contribute
 
-Feel free to fork this repository, raise issues, and create pull requests. All contributions are welcome, following the **RTFM** and **KISS** principles! 🚀
+Feel free to fork this repository, raise issues, and create pull requests. All contributions are welcome, following the **RTFM** and **KISS** principles! 
 
