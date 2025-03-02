@@ -16,7 +16,6 @@ class SaleOrder(models.Model):
         return res
 
     def _update_customer_metrics(self):
-        """Update customer metrics when a sale order is created or updated."""
         for order in self:
             metrics = (
                 self.env["res.partner.customer_metrics"]
@@ -36,7 +35,6 @@ class SaleOrder(models.Model):
                     )
                 )
 
-            # Recompute sales and order count
             sales = self.env["sale.order"].search(
                 [("partner_id", "=", order.partner_id.id)]
             )
