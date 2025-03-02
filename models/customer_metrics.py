@@ -50,7 +50,15 @@ class ResPartnerCustomerMetrics(models.Model):
 
     @api.model
     def init(self):
+        """Ensure cron is active and initialize customer metrics immediately."""
+        _logger.info("Initializing Customer Metrics Module...")
+        
+        # Ensure the cron job is active
         cron = self.env.ref("customer_metrics.ir_cron_customer_metrics_init", raise_if_not_found=False)
         if cron:
             cron.sudo().write({"active": True})
 
+        # Immediately populate the model
+        self._auto_create_customer_metrics()
+
+        _logger.info("Customer Metrics Module Initialization Completed.")
