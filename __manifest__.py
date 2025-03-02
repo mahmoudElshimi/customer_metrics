@@ -13,6 +13,7 @@
     ],
     "data": [
         "security/ir.model.access.csv", # Allow Sales Team to access this model.
+        "data/cron.xml"
         "views/customer_metrics_views.xml",  
         "views/menu.xml",
     ],
