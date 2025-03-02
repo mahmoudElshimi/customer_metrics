@@ -34,6 +34,18 @@ class ResPartnerCustomerMetrics(models.Model):
                 [("partner_id", "=", record.customer_id.id)]
             )
 
+    # Method to get top 5 customers
+    def get_top_customers(self):
+        top_customers = self.search([], order="total_sales desc", limit=5)
+        return [
+            {
+                "name": customer.customer_id.name,
+                "total_sales": customer.total_sales,
+                "order_count": customer.order_count,
+            }
+            for customer in top_customers
+        ]
+
     @api.model
     def _auto_create_customer_metrics(self):
         """Batch process customer metrics asynchronously using a cron job."""
