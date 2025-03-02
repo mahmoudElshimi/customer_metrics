@@ -17,17 +17,19 @@ class SaleOrder(models.Model):
     def _update_customer_metrics(self):
         """Update customer metrics when a sale order is created or updated."""
         for order in self:
-            metrics = self.env["res.partner.customer_metrics"].search(
+            metrics = self.env["res.partner.customer_metrics"].sudo().search(
                 [("customer_id", "=", order.partner_id.id)], limit=1
             )
 
             if not metrics:
-                # If no record exists, create a new one
-                metrics = self.env["res.partner.customer_metrics"].create({
+                # If no record exists, create it using sudo() to bypass security restrictions
+                metrics = self.env["res.partner.customer_metrics"].sudo().create({
                     "customer_id": order.partner_id.id,
                 })
 
             # Recompute sales and order count
             sales = self.env["sale.order"].search([("partner_id", "=", order.partner_id.id)])
-            metrics.total_sales = sum(sales.mapped("amount_total"))
-            metrics.order_count = len(sales)
+            metrics.sudo().write({
+                "total_sales": sum(sales.mapped("amount_total")),
+                "order_count": len(sales),
+            })
