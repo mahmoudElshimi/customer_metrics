@@ -13,9 +13,9 @@
     ],
     "data": [
         "security/ir.model.access.csv", # Allow Sales Team to access this model.
-        "data/cron.xml"
         "views/customer_metrics_views.xml",  
         "views/menu.xml",
+        "data/cron.xml"
     ],
     "installable": True,
     "application": True,  # I set this to True on purpose to make the module easier to find in the Odoo Apps menu.
