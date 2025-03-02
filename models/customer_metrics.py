@@ -1,5 +1,8 @@
 from odoo import models, fields, api
+import logging
 
+_logger = logging.getLogger(__name__)
+BATCH_SIZE = 10000
 
 class ResPartnerCustomerMetrics(models.Model):
     _name = "res.partner.customer_metrics"
@@ -8,48 +11,46 @@ class ResPartnerCustomerMetrics(models.Model):
     customer_id = fields.Many2one(
         "res.partner", string="Customer", required=True, ondelete="cascade"
     )
-    total_sales = fields.Float(
-        string="Total Sales", compute="_compute_total_sales", store=True
-    )
-    order_count = fields.Integer(
-        string="Order Count", compute="_compute_order_count", store=True
-    )
+    total_sales = fields.Float(string="Total Sales", compute="_compute_total_sales", readonly=True, store=True)
+    order_count = fields.Integer(string="Order Count", compute="_compute_order_count", readonly=True, store=True)
 
-    # Compute total sales
     @api.depends("customer_id")
     def _compute_total_sales(self):
         for record in self:
-            sale_orders = self.env["sale.order"].search(
-                [("partner_id", "=", record.customer_id.id)]
-            )
-            record.total_sales = sum(sale_orders.mapped("amount_total"))
+            sales = self.env["sale.order"].search([("partner_id", "=", record.customer_id.id)])
+            record.total_sales = sum(sales.mapped("amount_total"))
 
-    # Compute order count
     @api.depends("customer_id")
     def _compute_order_count(self):
         for record in self:
-            record.order_count = self.env["sale.order"].search_count(
-                [("partner_id", "=", record.customer_id.id)]
-            )
+            record.order_count = self.env["sale.order"].search_count([("partner_id", "=", record.customer_id.id)])
 
-    # Get top 5 customers
-    def get_top_customers(self):
-        return self.search([], order="total_sales desc", limit=5)
-
-    # Auto-create metrics for existing customers when the module is installed
+    @api.model
     def _auto_create_customer_metrics(self):
-        partners = self.env["res.partner"].search([])
-        for partner in partners:
-            self._update_or_create_metrics(partner.id)
+        """Batch process customer metrics asynchronously using a cron job."""
+        partner_model = self.env["res.partner"]
+        customer_metrics_model = self.env["res.partner.customer_metrics"].sudo()
 
-    # Create or update a metric record for a specific partner
-    def _update_or_create_metrics(self, partner_id):
-        metric = self.search([("customer_id", "=", partner_id)], limit=1)
-        if not metric:
-            metric = self.create({"customer_id": partner_id})
-        metric._compute_total_sales()
-        metric._compute_order_count()
+        total_partners = partner_model.search_count([])
+        _logger.info(f"Starting Customer Metrics Initialization: {total_partners} customers found.")
+
+        for offset in range(0, total_partners, BATCH_SIZE):
+            partners = partner_model.search([], offset=offset, limit=BATCH_SIZE)
+            existing_customers = customer_metrics_model.search([("customer_id", "in", partners.ids)])
+            existing_ids = set(existing_customers.mapped("customer_id.id"))
+            new_partners = [partner.id for partner in partners if partner.id not in existing_ids]
+
+            if new_partners:
+                customer_metrics_model.create([{"customer_id": pid} for pid in new_partners])
+                self.env.cr.commit()  # Commit after processing each batch
+
+            _logger.info(f"Processed {offset + len(partners)}/{total_partners} customers...")
+
+        _logger.info("Customer Metrics Initialization Completed.")
 
     @api.model
     def init(self):
-        self._auto_create_customer_metrics()
+        cron = self.env.ref("customer_metrics.ir_cron_customer_metrics_init", raise_if_not_found=False)
+        if cron:
+            cron.sudo().write({"active": True})
+
