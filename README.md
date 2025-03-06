@@ -47,7 +47,7 @@ To install the Customer Metrics Dashboard module, follow these steps:
 ## Links
 
 - [Odoo GitHub Repository](https://github.com/odoo/odoo)
-- [Odoo 15 Installation Guide](https://www.odoo.com/documentation/15.0/administration/install.html)
+- [Odoo 15 Installation Guide](https://www.odoo.com/documentation/15.0/administration/on_premise.html)
 
 ## How to Contribute
 
